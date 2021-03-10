@@ -41,6 +41,8 @@ import java.util.List;
 import java.util.concurrent.Semaphore;
 import java.util.concurrent.TimeUnit;
 
+// accessing camera
+
 public class Camera2Helper {
     private static final int MAX_PREVIEW_WIDTH = 1920;
     private static final int MAX_PREVIEW_HEIGHT = 1080;

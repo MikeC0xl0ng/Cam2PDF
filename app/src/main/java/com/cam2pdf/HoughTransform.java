@@ -5,71 +5,72 @@ import android.graphics.Color;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+// Hough Transform algorithm
 public class HoughTransform {
+
+    // colors' contastants
     final int WHITE = Color.argb(255, 255, 255,255);
     final int BLACK = Color.argb(255, 0, 0,0);
     final int RED = Color.argb(255, 255, 0,0);
 
     int[][] space;
-    int[][] processed_img;
+    int[][] processed_bitmap;
     int max_val;
-    public Bitmap img;
+    public Bitmap bitmap;
     public int[] k;
     public double filter;
     public int theta_max;
 
-
-
-    public HoughTransform(Bitmap img_, double k1, double filter, int theta_max){
+    public HoughTransform(Bitmap bitmapIn, double k1, double filter, int theta_max){
         try{
-            img = Bitmap.createBitmap(img_.getWidth(),img_.getHeight(),Bitmap.Config.ARGB_8888);
-            for (int y=0; y<img.getHeight(); y++){
-                for (int x=0; x<img.getWidth(); x++){
-                    img.setPixel(x, y, img_.getPixel(x, y));
+            bitmap = Bitmap.createBitmap(bitmapIn.getWidth(),bitmapIn.getHeight(),Bitmap.Config.ARGB_8888); // each pixel is stored on 4 bytes (ARGB_8888)
+            for (int y=0; y<bitmap.getHeight(); y++){
+                for (int x=0; x<bitmap.getWidth(); x++){
+                    bitmap.setPixel(x, y, bitmapIn.getPixel(x, y));
                 }
             }
         }catch (Exception ex){
             return;
         }
-        int diagonal = (int)Math.sqrt(Math.pow(img.getWidth(), 2) + Math.pow(img.getHeight(), 2)) + 1;
+        int diagonal = (int)Math.sqrt(Math.pow(bitmap.getWidth(), 2) + Math.pow(bitmap.getHeight(), 2)) + 1;
         space = new int[diagonal][theta_max];
-        processed_img = new int[img.getHeight()][img.getWidth()];
+        processed_bitmap = new int[bitmap.getHeight()][bitmap.getWidth()];
         this.theta_max = theta_max;
         this.filter = filter;
         this.k = new int[]{(int)(k1 * space[0].length), (int)(k1 * space.length)};
-        Bitmap edge_img = new EdgeDetector(img).detectEdges();
-        for (int i=0; i<edge_img.getHeight(); i++){
-            for (int j=0; j<edge_img.getWidth(); j++){
-                processed_img[i][j] = edge_img.getPixel(j, i);
+        Bitmap edge_bitmap = new EdgeDetector(bitmap).detectEdges();
+        for (int i=0; i<edge_bitmap.getHeight(); i++){
+            for (int j=0; j<edge_bitmap.getWidth(); j++){
+                processed_bitmap[i][j] = edge_bitmap.getPixel(j, i);
             }
         }
         detectLines();
         findMaxes(space);
-        drawDetectedLines(processed_img);
+        drawDetectedLines(processed_bitmap);
     }
 
-    public HoughTransform(Bitmap img, int theta_max){
-        this.img=img;
-        int diagonal = (int)Math.sqrt(Math.pow(img.getWidth(), 2) + Math.pow(img.getHeight(), 2)) + 1;
+    public HoughTransform(Bitmap bitmap, int theta_max){
+        this.bitmap = bitmap;
+        int diagonal = (int)Math.sqrt(Math.pow(bitmap.getWidth(), 2) + Math.pow(bitmap.getHeight(), 2)) + 1;
         space = new int[diagonal][theta_max];
-        processed_img = new int[img.getHeight()][img.getWidth()];
+        processed_bitmap = new int[bitmap.getHeight()][bitmap.getWidth()];
         this.theta_max = theta_max;
         this.filter = 0.6;
-        Bitmap edge_img = new EdgeDetector(img).detectEdges();
-        for (int i=0; i<edge_img.getHeight(); i++){
-            for (int j=0; j<edge_img.getWidth(); j++){
-                processed_img[i][j] = edge_img.getPixel(j, i);
+        Bitmap edge_bitmap = new EdgeDetector(bitmap).detectEdges();
+        for (int i=0; i<edge_bitmap.getHeight(); i++){
+            for (int j=0; j<edge_bitmap.getWidth(); j++){
+                processed_bitmap[i][j] = edge_bitmap.getPixel(j, i);
             }
         }
         detectLines();
         findMaxes(space);
-        drawDetectedLines(processed_img);
+        drawDetectedLines(processed_bitmap);
     }
 
     private void detectLines(){
-        for (int y=0; y<processed_img.length; y++){
-            for (int x=0; x<processed_img[0].length; x++){
-                if (processed_img[y][x] != BLACK){
+        for (int y=0; y<processed_bitmap.length; y++){
+            for (int x=0; x<processed_bitmap[0].length; x++){
+                if (processed_bitmap[y][x] != BLACK){
                     vote(x, y);
                 }
             }
@@ -105,7 +106,7 @@ public class HoughTransform {
         for (int r=0; r<m.length; r++){
             for (int theta=0; theta<theta_max; theta++){
                 if (isMax(m, theta, r)){
-                    drawLine(processed_img, new int[]{theta, r});
+                    drawLine(processed_bitmap, new int[]{theta, r});
                 }
             }
         }
@@ -208,7 +209,7 @@ public class HoughTransform {
             for (int x=0; x<m[0].length; x++){
                 if (m[y][x] == RED){
                     try{
-                        img.setPixel(x, y, RED);
+                        bitmap.setPixel(x, y, RED);
                     }catch (Exception ex){
 
                     }
@@ -216,13 +217,4 @@ public class HoughTransform {
             }
         }
     }
-
-    /*public void drawImage(){
-        JFrame f = new JFrame("Hough Transform (theta max: " + space[0].length + ")");
-        f.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-        f.getContentPane().setLayout(new FlowLayout());
-        f.add(new JLabel(new ImageIcon(img)));
-        f.pack();
-        f.setVisible(true);
-    }*/
 }

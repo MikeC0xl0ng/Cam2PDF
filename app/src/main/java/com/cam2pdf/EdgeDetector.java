@@ -5,41 +5,44 @@ import android.graphics.Bitmap;
 
 
 public class EdgeDetector {
-    
-    Bitmap img;
-    
-    public EdgeDetector(Bitmap img_){
-        img = toGrayScale(img_);
+
+    Bitmap bitmap;
+
+    public EdgeDetector(Bitmap bitmap_){
+        bitmap = toGrayScale(bitmap_);
     }
-    
-    private Bitmap toGrayScale(Bitmap img_){
-        //BufferedImage gray_img = new BufferedImage(img_.getWidth(), img_.getHeight(), BufferedImage.TYPE_BYTE_GRAY);
-        Bitmap gray_img = Bitmap.createBitmap(img_.getWidth(),img_.getHeight(),Bitmap.Config.ARGB_8888);
-        for (int y=0; y<img_.getHeight(); y++){
-            for (int x=0; x<img_.getWidth(); x++){
-                gray_img.setPixel(x, y, img_.getPixel(x, y));
+
+    private Bitmap toGrayScale(Bitmap bitmap_){
+        //BufferedImage gray_bitmap = new BufferedImage(bitmap_.getWidth(), bitmap_.getHeight(), BufferedImage.TYPE_BYTE_GRAY);
+        Bitmap grayscale_bitmap = Bitmap.createBitmap(bitmap_.getWidth(),bitmap_.getHeight(),Bitmap.Config.ALPHA_8);  // each pixel is stored as a single translucency (alpha) channel, no color information is stored. (ALPHA_8)
+        for (int y=0; y < bitmap_.getHeight(); y++)
+            for (int x=0; x < bitmap_.getWidth(); x++)
+                grayscale_bitmap.setPixel(x, y, bitmap_.getPixel(x, y));
+        return grayscale_bitmap;
+    }
+
+    // never used
+    /*
+    public Bitmap toGrayScale(){
+        //BufferedImage gray_bitmap = new BufferedImage(bitmap_.getWidth(), bitmap_.getHeight(), BufferedImage.TYPE_BYTE_GRAY);
+        Bitmap grayscale_bitmap = Bitmap.createBitmap(bitmap.getWidth(),bitmap.getHeight(),Bitmap.Config.ALPHA_8);
+        for (int y=0; y<bitmap.getHeight(); y++){
+            for (int x=0; x<bitmap.getWidth(); x++){
+                grayscale_bitmap.setPixel(x, y, bitmap.getPixel(x, y));
             }
         }
-        return gray_img;
+        return grayscale_bitmap;
     }
-    
+    */
+    // never used
+
     public Bitmap detectEdges(){
-        int [][] img_= new int [img.getHeight()][img.getWidth()];
-        for(int y=0;y<img_.length;y++){
-            for(int x=0;x<img_[0].length;x++){
-                img_[y][x]=img.getPixel(x, y);
-            }
-        }
-        //BufferedImage buffer=new BufferedImage(img.getWidth(),img.getHeight(),BufferedImage.TYPE_INT_RGB);
-        Bitmap buffer = Bitmap.createBitmap(img.getWidth(),img.getHeight(),Bitmap.Config.ARGB_8888);
-        for(int y=0;y<img_.length;y++){
-            for(int x=0;x<img_[0].length;x++){
-                buffer.setPixel(x,y,img_[y][x]);
-            }
-        }
-        return img;
+
+        // code that detects edges
+
+        return bitmap;
     }
-    
-   
-    
+
+
+
 }
