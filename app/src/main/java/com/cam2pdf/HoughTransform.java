@@ -3,8 +3,6 @@ package com.cam2pdf;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 
-import androidx.appcompat.app.AppCompatActivity;
-
 // Hough Transform algorithm
 public class HoughTransform {
 
@@ -38,7 +36,7 @@ public class HoughTransform {
         this.theta_max = theta_max;
         this.filter = filter;
         this.k = new int[]{(int)(k1 * space[0].length), (int)(k1 * space.length)};
-        Bitmap edge_bitmap = new EdgeDetector(bitmap).detectEdges();
+        Bitmap edge_bitmap = new CannyEdge(bitmap).detectEdges();
         for (int i=0; i<edge_bitmap.getHeight(); i++){
             for (int j=0; j<edge_bitmap.getWidth(); j++){
                 processed_bitmap[i][j] = edge_bitmap.getPixel(j, i);
@@ -56,7 +54,7 @@ public class HoughTransform {
         processed_bitmap = new int[bitmap.getHeight()][bitmap.getWidth()];
         this.theta_max = theta_max;
         this.filter = 0.6;
-        Bitmap edge_bitmap = new EdgeDetector(bitmap).detectEdges();
+        Bitmap edge_bitmap = new CannyEdge(bitmap).detectEdges();
         for (int i=0; i<edge_bitmap.getHeight(); i++){
             for (int j=0; j<edge_bitmap.getWidth(); j++){
                 processed_bitmap[i][j] = edge_bitmap.getPixel(j, i);
